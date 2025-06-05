@@ -1,0 +1,230 @@
+import os
+import time
+import getpass
+
+#Listas
+menu = ["Banco en línea",
+        "Hazte usuario",
+        "Crear Contraseña",
+        "Modo Admin",
+        "Salir"
+        ]
+
+menu_banco = ["Tranferencia",
+              "Ver Monto",
+              "Ver Tranferencias.",
+              "Ver Usuarios",
+              "Solicitar prestamo."
+              ]
+
+menu_tranferencia = ["Nuevo destinatario:",
+                     "Realizar Tranferencia",
+                     "Salir"]
+
+usuarios = []
+
+tranferencias = []
+
+
+#Variables
+passw = None 
+passadm = 13344
+dinero = 5000000
+
+while True:
+    print(r"""
+╔═══════════════════════════╗
+║    BANCO EN LÍNEA 💳      ║
+╚═══════════════════════════╝
+""")
+
+    for i, op in enumerate(menu):
+        print(f"{i + 1}. {op}")
+
+    print("\n")
+    userop = input("Seleccione una opción:\n> ")
+
+    if userop == "1":
+        if passw is None:
+            print("Primero debe crear una contraseña (opción 3).")
+            time.sleep(1)
+            os.system("cls")
+            continue
+
+        while True:
+            rut = input("Ingrese su RUT (9 caracteres):\n> ")
+            if len(rut) == 9 or passadm:
+                print("RUT válido.")
+                while True:
+                    passw_n = input("Ingrese su contraseña:\n> ")
+                    if passw_n == passw or passadm:
+                        print("Acceso permitido.")
+                        time.sleep(1)
+                        os.system("cls")
+                        break  # Sale del ciclo contraseña
+                    else:
+                        print("Las contraseñas no coinciden. Intente de nuevo.")
+                break  # Sale del ciclo RUT
+            else:
+                print("Error!, RUT inválido.")
+                
+        while True:
+            
+            print("       *** MENU ***")
+            for i, op in enumerate(menu_banco):
+                print(f"{i + 1}. {op}")
+
+            print("\n")
+            useropbanco = input("Seleccione una opción:\n> ")
+            time.sleep(1)
+            os.system("cls")
+            
+            if useropbanco == "1":
+                print("Sistema de tranferencia.")
+                for i, op in enumerate(menu_tranferencia):
+                    print(f"{i + 1}. {op}")
+                    
+                print("\n")
+                usertranfrencia = input("Seleccione una opción:\n> ")
+                while True:
+                    if usertranfrencia == "1":
+                        n_destinatario = input("Ingrese el nombre del nuevo destinatario:\n>")
+                        if n_destinatario.replace(" ", "").isalpha():
+                            print("Nuevo destinatario guardado con éxito.")
+                            nuevo_cliente = {"Nombre": n_destinatario}
+                            usuarios.append(nuevo_cliente)
+                            break
+                        
+                        else:
+                            print("Error!, Solo puedes ingresar caracteres alfabeticos.")
+                            time.sleep(1)
+                            os.system("cls")
+                            
+                    elif usertranfrencia == "2":
+                                     # REALIZAR TRANSFERENCIAS
+                        if not usuarios:
+                            print("⚠ No hay usuarios registrados para transferencias.")
+                            time.sleep(1)
+
+
+                        print("\n📋 Lista de usuarios disponibles:")
+                        for i, op in enumerate(usuarios):
+                            print(f" {i + 1}. {op['Nombre']}")  # Accede al campo 'Nombre'
+
+                        print("\n")
+                        try:
+                            tranfer = int(input("Seleccione al usuario (número):\n> "))
+                            if 1 <= tranfer <= len(usuarios):
+                                destinatario = usuarios[tranfer - 1]
+                                print(f"\n🟢 Usuario seleccionado: {destinatario['Nombre']}")
+                                # Aquí podrías continuar con el ingreso del monto, verificación de saldo, etc.
+                            else:
+                                print("❌ Opción fuera de rango.")
+                                time.sleep(1)
+                        except ValueError:
+                            print("❌ Entrada inválida. Debes ingresar un número.")
+                            time.sleep(1)
+                        
+                        
+                    elif usertranfrencia == "3":
+                        print ("Saliendo..")
+                        time.sleep(1)
+                        os.system("cls")
+                        break
+                        
+                
+            elif useropbanco == "2":
+                #ver Monto
+                print("       *** Cartera. ***")
+                print(f"Saldo Disponible: {dinero}")
+                input("Presione ENTER para continuar.")
+                time.sleep(1)
+                os.system("cls")
+                break
+                
+            elif useropbanco == "3":
+                #Ver Tranferencias
+                pass
+            elif useropbanco == "4":
+                #Ver usuarios
+                for idx,diccionario in enumerate(usuarios):
+                    print(f"{idx +1} {diccionario["Nombre"]}")
+                    print()
+                    input("Presione ENTER para continuar.")
+                    time.sleep(1)
+                    os.system("cls")
+                    
+            elif useropbanco == "5":
+                #Prestamos.
+                pass 
+            else:
+                print("Error!, Opcion no válida,intente nuevamente\n")
+                  
+    
+                    
+                
+
+    elif userop == "2":
+        # Aquí puedes agregar código para "Hazte usuario"
+        pass
+
+    elif userop == "3":
+        while True:
+            try:
+                print("Bienvenido a Creación de contraseña.")
+                nueva_passw = input("Cree una contraseña (6 dígitos):\n> ")
+                assert len(nueva_passw) == 6, "La contraseña debe tener 6 caracteres"
+                int(nueva_passw)  
+                passw = nueva_passw  
+                print("PIN válido. Contraseña guardada.")
+                time.sleep(1)
+                os.system("cls")
+                break
+            except AssertionError as e:
+                print("Error:", e)
+            except ValueError:
+                print("Error: Solo debe contener números.")
+
+    elif userop == "4":
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("\033[92m" + "="*40)
+        print("       *** MODO ADMIN ***")
+        print("="*40 + "\033[0m")
+        time.sleep(0.5)
+        print("\033[94mSolicitando credenciales...\033[0m")
+        time.sleep(1)
+
+        adm = int(input("\033[93m>> Ingrese contraseña de administrador: \033[0m"))
+
+        print("\nVerificando...\n")
+        time.sleep(1.5)
+
+        if adm == passadm:
+            print("\033[92m✔ ACCESO CONCEDIDO: MODO ADMIN ACTIVADO ✔\033[0m")
+            time.sleep(1)
+            print("\033[92m> Sistemas internos desbloqueados...\033[0m")
+        else:
+            print("\033[91m✖ ACCESO DENEGADO: CONTRASEÑA INCORRECTA ✖\033[0m")
+            time.sleep(1)
+            username = getpass.getuser()
+            print(f"\033[91m> Alerta: intento de acceso no autorizado por el usuario: {username}\033[0m")
+            time.sleep(2)
+            print("\033[91m> Iniciando protocolo de seguridad...\033[0m")
+            time.sleep(2)
+
+            for i in range(5):
+                print(f"\033[91m> Borrando archivos del sistema ({(i+1)*20}%)...\033[0m")
+                time.sleep(0.8)
+
+        print("\033[91m> ERROR: No se pudo completar el borrado.\033[0m")
+        time.sleep(1)
+        print("\033[93m> Simulación finalizada. No se ha producido ningún daño real.\033[0m")
+
+    elif userop == "5":
+        print("Saliendo....")
+        break
+    
+    else:
+        print("Error!, intente nuevamente.")
+        time.sleep(1)
+        os.system("cls")
